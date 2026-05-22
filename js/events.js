@@ -1,7 +1,29 @@
+import {
+    todoForm,
+    editForm,
+    cancelEditBtn,
+    filterSelect,
+    eraseBtn,
+    todoInput,
+    editInput,
+    searchInput
+} from "./variaveis.js"
+
+
+import {
+    saveTodo,
+    toggleForm,
+    updateTodo,
+    searchTask,
+    taskExists,
+    setOldInputValue
+} from "./functions.js"
+
+
 todoForm.addEventListener("submit", (e) => {
     e.preventDefault()
 
-    const inputValue = todoInput.value
+    const inputValue = todoInput.value.toLowerCase().trim()
     if (inputValue) {
         if (taskExists(inputValue)) {
             alert("Tarefa já registrada !!!")
@@ -21,7 +43,7 @@ document.addEventListener("click", (e) => {
     let todoTitle
 
     if (parentEl && parentEl.querySelector("h3")) {
-        todoTitle = parentEl.querySelector("h3").innerText
+        todoTitle = parentEl.querySelector("h3").textContent
     }
 
     if (targetEl.classList.contains("finish-todo")) {
@@ -33,16 +55,16 @@ document.addEventListener("click", (e) => {
     if (targetEl.classList.contains("edit-todo")) {
         toggleForm()
         editInput.value = todoTitle
-        oldInputValue = todoTitle
+        setOldInputValue(todoTitle)
     }
 })
 
 editForm.addEventListener("submit", (e) => {
     e.preventDefault()
 
-    const editInputValue = editInput.value
+    const editInputValue = editInput.value.toLowerCase().trim()
     if (editInputValue) {
-        if (taskExists(editInputValue,true)) {
+        if (taskExists(editInputValue, true)) {
             alert("Essa tarefa já existe !!!")
         } else {
             updateTodo(editInputValue)
@@ -92,3 +114,4 @@ eraseBtn.addEventListener("click", (e) => {
     searchTask()
     searchInput.focus()
 })
+

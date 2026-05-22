@@ -1,13 +1,13 @@
-const todoForm = document.querySelector("#todo-form")
-const todoInput = document.querySelector("#todo-input")
-const todoList = document.querySelector("#todo-list")
-const editForm = document.querySelector("#edit-form")
-const editInput = document.querySelector("#edit-input")
-const cancelEditBtn = document.querySelector("#cancel-edit-btn")
-const filterSelect = document.querySelector("#filter-select")
-const searchInput = document.querySelector("#search-input")
-const eraseBtn = document.querySelector("#erase-button")
-const toolbar = document.querySelector("#toolbar")
+export const todoForm = document.querySelector("#todo-form")
+export const todoInput = document.querySelector("#todo-input")
+export const todoList = document.querySelector("#todo-list")
+export const editForm = document.querySelector("#edit-form")
+export const editInput = document.querySelector("#edit-input")
+export const cancelEditBtn = document.querySelector("#cancel-edit-btn")
+export const filterSelect = document.querySelector("#filter-select")
+export const searchInput = document.querySelector("#search-input")
+export const eraseBtn = document.querySelector("#erase-button")
+export const toolbar = document.querySelector("#toolbar")
 
-let oldInputValue
+
 

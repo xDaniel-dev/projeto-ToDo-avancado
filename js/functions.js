@@ -1,10 +1,19 @@
-function saveTodo(text) {
+import { 
+    todoForm,
+    editForm,
+    todoList,
+    toolbar,
+    searchInput
+} from "./variaveis.js"
+
+
+export function saveTodo(text) {
 
     const todo = document.createElement("div")
     todo.className = "todo"
 
     const todoTitle = document.createElement("h3")
-    todoTitle.innerText = text
+    todoTitle.textContent = text
     todo.appendChild(todoTitle)
 
     const doneBtn = document.createElement("button")
@@ -26,32 +35,32 @@ function saveTodo(text) {
 
 }
 
-function toggleForm() {
+export function toggleForm() {
     todoForm.classList.toggle("hide")
     editForm.classList.toggle("hide")
     todoList.classList.toggle("hide")
     toolbar.classList.toggle("hide")
 }
 
-function updateTodo(text) {
+export function updateTodo(text) {
     const todos = document.querySelectorAll(".todo")
 
     todos.forEach(element => {
         let todoTitle = element.querySelector("h3")
 
-        if (todoTitle.innerText === oldInputValue) {
-            todoTitle.innerText = text
+        if (todoTitle.textContent === oldInputValue) {
+            todoTitle.textContent = text
         }
     });
 }
 
-function searchTask() {
+export function searchTask() {
     const todos = document.querySelectorAll(".todo")
     const searchInputValue = searchInput.value.toLowerCase().trim()
 
     todos.forEach((element) => {
 
-        const todoTitle = element.querySelector("h3").innerText.toLowerCase()
+        const todoTitle = element.querySelector("h3").textContent.toLowerCase().trim()
 
         if (todoTitle.includes(searchInputValue)) {
             element.classList.remove("hide")
@@ -63,11 +72,11 @@ function searchTask() {
     searchInput.value = ""
 }
 
-function taskExists(text, ignoreOldValue = false) {
+export function taskExists(text, ignoreOldValue = false) {
     const todos = document.querySelectorAll(".todo")
 
     return [...todos].some((element) => {
-        const todoTitle = element.querySelector("h3").innerText
+        const todoTitle = element.querySelector("h3").textContent
 
         if (ignoreOldValue) {
             return todoTitle === text && todoTitle !== oldInputValue
@@ -76,4 +85,10 @@ function taskExists(text, ignoreOldValue = false) {
         return todoTitle === text
 
     })
+}
+
+export let oldInputValue = ""
+
+export function setOldInputValue(value) {
+    oldInputValue = value
 }
