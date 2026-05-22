@@ -1,32 +1,13 @@
-## Atualizações recentes do projeto
+## Refatoração e Persistência de Dados
 
-O projeto passou por uma refatoração estrutural com foco em organização, modularização e boas práticas de desenvolvimento JavaScript moderno.
+O projeto recebeu uma melhoria estrutural com a implementação de persistência de dados através do `localStorage`, permitindo armazenar tarefas e manter seu estado mesmo após o recarregamento da página.
 
-### Principais melhorias implementadas
+A aplicação também foi reorganizada utilizando módulos JavaScript (`ESModules`), separando responsabilidades entre arquivos específicos para variáveis, funções e eventos, tornando o código mais limpo, reutilizável e escalável.
 
-* Separação do código em módulos utilizando ES Modules (`import/export`)
-* Organização da aplicação em arquivos distintos:
+### Funcionalidades adicionadas
 
-  * `variaveis.js`
-  * `functions.js`
-  * `events.js`
-* Remoção de dependência de variáveis globais
-* Implementação de gerenciamento de estado para controle da edição de tarefas
-* Padronização de entradas utilizando `trim()` e `toLowerCase()`
-* Melhor validação para evitar tarefas duplicadas
-* Estrutura mais escalável e próxima de aplicações profissionais
-* Código mais limpo, reutilizável e de fácil manutenção
-* Melhor organização dos eventos e da manipulação do DOM
-* Desativação do autocomplete nos inputs para melhorar a experiência do usuário
-
-### Tecnologias utilizadas
-
-* HTML5
-* CSS3
-* JavaScript
-* ES Modules
-* Bootstrap Icons
-
-### Objetivo do projeto
-
-Este projeto foi desenvolvido com o objetivo de praticar conceitos de JavaScript moderno, manipulação do DOM, modularização e organização de código voltados para aplicações web.
+- Persistência de tarefas no navegador;
+- Salvamento do status de conclusão;
+- Carregamento automático das tarefas salvas;
+- Estrutura modularizada;
+- Melhor organização e manutenção do código.

@@ -7,10 +7,14 @@ import {
 } from "./variaveis.js"
 
 
-export function saveTodo(text) {
+export function saveTodo(text, done = false , save = true) {
 
     const todo = document.createElement("div")
     todo.className = "todo"
+
+    if(done){
+        todo.classList.add("done")
+    }
 
     const todoTitle = document.createElement("h3")
     todoTitle.textContent = text
@@ -32,6 +36,33 @@ export function saveTodo(text) {
     todo.appendChild(removeBtn)
 
     todoList.appendChild(todo)
+
+    if(save){
+        saveTodoLocalStorage()
+    }
+
+}
+
+export function saveTodoLocalStorage(){
+    const todos = []
+
+    document.querySelectorAll(".todo").forEach((element)=>{
+        todos.push({
+            text: element.querySelector("h3").textContent,
+            done: element.classList.contains("done")
+        })
+    })
+
+    localStorage.setItem("todos",JSON.stringify(todos))
+}
+
+export function loadTodos(){
+    
+    const todos = JSON.parse(localStorage.getItem("todos")) || []
+
+    todos.forEach((element)=>{
+        saveTodo(element.text,element.done,false)
+    })
 
 }
 
@@ -87,7 +118,7 @@ export function taskExists(text, ignoreOldValue = false) {
     })
 }
 
-export let oldInputValue = ""
+let oldInputValue = ""
 
 export function setOldInputValue(value) {
     oldInputValue = value

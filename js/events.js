@@ -16,9 +16,10 @@ import {
     updateTodo,
     searchTask,
     taskExists,
-    setOldInputValue
+    setOldInputValue,
+    saveTodoLocalStorage,
+    loadTodos
 } from "./functions.js"
-
 
 todoForm.addEventListener("submit", (e) => {
     e.preventDefault()
@@ -48,9 +49,11 @@ document.addEventListener("click", (e) => {
 
     if (targetEl.classList.contains("finish-todo")) {
         parentEl.classList.toggle("done")
+        saveTodoLocalStorage()
     }
     if (targetEl.classList.contains("remove-todo")) {
         parentEl.remove()
+        saveTodoLocalStorage()
     }
     if (targetEl.classList.contains("edit-todo")) {
         toggleForm()
@@ -68,6 +71,7 @@ editForm.addEventListener("submit", (e) => {
             alert("Essa tarefa já existe !!!")
         } else {
             updateTodo(editInputValue)
+            saveTodoLocalStorage()
         }
     }
 
@@ -115,3 +119,4 @@ eraseBtn.addEventListener("click", (e) => {
     searchInput.focus()
 })
 
+loadTodos()
