@@ -6,63 +6,69 @@ import {
     searchInput
 } from "./variaveis.js"
 
+let todos = []
 
-export function saveTodo(text, done = false , save = true) {
+export function getTodoState(){
+    return todos
+}
 
-    const todo = document.createElement("div")
-    todo.className = "todo"
+export function renderTodos(filterTodos = todos){
 
-    if(done){
-        todo.classList.add("done")
-    }
+    todoList.innerHTML = ""
 
-    const todoTitle = document.createElement("h3")
-    todoTitle.textContent = text
-    todo.appendChild(todoTitle)
+    filterTodos.forEach((element)=>{
+        const todoEl = document.createElement("div")
 
-    const doneBtn = document.createElement("button")
-    doneBtn.className = "finish-todo"
-    doneBtn.innerHTML = '<i class="bi bi-check2"></i>'
-    todo.appendChild(doneBtn)
+        todoEl.className = "todo"
+        todoEl.dataset.id = element.id
 
-    const editBtn = document.createElement("button")
-    editBtn.className = "edit-todo"
-    editBtn.innerHTML = '<i class="bi bi-pencil-square"></i>'
-    todo.appendChild(editBtn)
+        if(element.done){
+            todoEl.classList.add("done")
+        }
 
-    const removeBtn = document.createElement("button")
-    removeBtn.className = "remove-todo"
-    removeBtn.innerHTML = '<i class="bi bi-trash"></i>'
-    todo.appendChild(removeBtn)
+        todoEl.innerHTML = `
+            <h3>${element.text}</h3>
+            
+            <button class="finish-todo">
+                <i class="bi bi-check2"></i>
+            </button>
+            
+            <button class="edit-todo">
+                <i class="bi bi-pencil-square"></i>
+            </button>
 
-    todoList.appendChild(todo)
+            <button class="remove-todo">
+                <i class="bi bi-trash"></i>
+            </button>
+        `
 
-    if(save){
-        saveTodoLocalStorage()
-    }
+        todoList.appendChild(todoEl)
+    })
 
+}
+export function saveTodo(text) {
+
+    todos.push({
+        id:Date.now().toString(),
+        text,
+        done: false
+    })
+
+    saveTodoLocalStorage()
+    renderTodos()
 }
 
 export function saveTodoLocalStorage(){
-    const todos = []
-
-    document.querySelectorAll(".todo").forEach((element)=>{
-        todos.push({
-            text: element.querySelector("h3").textContent,
-            done: element.classList.contains("done")
-        })
-    })
 
     localStorage.setItem("todos",JSON.stringify(todos))
+
 }
 
 export function loadTodos(){
     
-    const todos = JSON.parse(localStorage.getItem("todos")) || []
+     todos = JSON.parse(localStorage.getItem("todos")) || []
 
-    todos.forEach((element)=>{
-        saveTodo(element.text,element.done,false)
-    })
+    renderTodos()
 
 }
 
@@ -74,52 +80,72 @@ export function toggleForm() {
 }
 
 export function updateTodo(text) {
-    const todos = document.querySelectorAll(".todo")
 
-    todos.forEach(element => {
-        let todoTitle = element.querySelector("h3")
-
-        if (todoTitle.textContent === oldInputValue) {
-            todoTitle.textContent = text
+    todos = todos.map((todo)=>{
+        if(todo.id === oldTodoId){
+            return{
+                ...todo,
+                text
+            }
         }
-    });
-}
 
-export function searchTask() {
-    const todos = document.querySelectorAll(".todo")
-    const searchInputValue = searchInput.value.toLowerCase().trim()
+        return todo
 
-    todos.forEach((element) => {
-
-        const todoTitle = element.querySelector("h3").textContent.toLowerCase().trim()
-
-        if (todoTitle.includes(searchInputValue)) {
-            element.classList.remove("hide")
-        } else {
-            element.classList.add("hide")
-        }
     })
 
-    searchInput.value = ""
+    saveTodoLocalStorage()
+    renderTodos()
+}
+
+export function removeTodo(id){
+    todos = todos.filter((todo)=>{
+        return todo.id !== id
+    })
+
+    saveTodoLocalStorage()
+    renderTodos()
+}
+
+export function toggleDone(id){
+    todos = todos.map((todo)=>{
+        if(todo.id === id){
+            return {
+                ...todo,
+                done: !todo.done
+            }
+        }
+        return todo
+    })
+
+    saveTodoLocalStorage()
+    renderTodos()
+
+}
+
+export function searchTask(value = "") {
+   
+    const filterTodos = todos.filter((todo)=>{
+    return todo.text.toLowerCase().includes(value.toLowerCase())
+   })
+
+   renderTodos(filterTodos)
 }
 
 export function taskExists(text, ignoreOldValue = false) {
-    const todos = document.querySelectorAll(".todo")
 
-    return [...todos].some((element) => {
-        const todoTitle = element.querySelector("h3").textContent
-
-        if (ignoreOldValue) {
-            return todoTitle === text && todoTitle !== oldInputValue
+    return todos.some((todo)=>{
+        if(ignoreOldValue){
+            return todo.text === text && todo.id !== oldTodoId
         }
 
-        return todoTitle === text
-
+        return todo.text === text
     })
+   
 }
 
-let oldInputValue = ""
+let oldTodoId = null
 
-export function setOldInputValue(value) {
-    oldInputValue = value
+export function setOldTodoId(id){
+    oldTodoId = id
 }
+

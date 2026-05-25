@@ -3,7 +3,6 @@ import {
     editForm,
     cancelEditBtn,
     filterSelect,
-    eraseBtn,
     todoInput,
     editInput,
     searchInput
@@ -16,9 +15,13 @@ import {
     updateTodo,
     searchTask,
     taskExists,
-    setOldInputValue,
+    setOldTodoId,
     saveTodoLocalStorage,
-    loadTodos
+    loadTodos,
+    getTodoState,
+    toggleDone,
+    removeTodo,
+    renderTodos
 } from "./functions.js"
 
 todoForm.addEventListener("submit", (e) => {
@@ -39,26 +42,25 @@ todoForm.addEventListener("submit", (e) => {
 })
 
 document.addEventListener("click", (e) => {
-    const targetEl = e.target
-    const parentEl = targetEl.closest(".todo")
-    let todoTitle
+    
+    const button = e.target.closest("button")
 
-    if (parentEl && parentEl.querySelector("h3")) {
-        todoTitle = parentEl.querySelector("h3").textContent
-    }
+    if(!button) return
 
-    if (targetEl.classList.contains("finish-todo")) {
-        parentEl.classList.toggle("done")
-        saveTodoLocalStorage()
+    const parentEl = button.closest(".todo")
+    
+    const id = parentEl.dataset.id
+
+    if (button.classList.contains("finish-todo")) {
+        toggleDone(id)
     }
-    if (targetEl.classList.contains("remove-todo")) {
-        parentEl.remove()
-        saveTodoLocalStorage()
+    if (button.classList.contains("remove-todo")) {
+        removeTodo(id)
     }
-    if (targetEl.classList.contains("edit-todo")) {
+    if (button.classList.contains("edit-todo")) {
         toggleForm()
-        editInput.value = todoTitle
-        setOldInputValue(todoTitle)
+        editInput.value = parentEl.querySelector("h3").textContent
+        setOldTodoId(id)
     }
 })
 
@@ -71,7 +73,6 @@ editForm.addEventListener("submit", (e) => {
             alert("Essa tarefa já existe !!!")
         } else {
             updateTodo(editInputValue)
-            saveTodoLocalStorage()
         }
     }
 
@@ -87,36 +88,32 @@ cancelEditBtn.addEventListener("click", (e) => {
 
 filterSelect.addEventListener("change", (e) => {
     const filterValue = e.target.value
-    const todos = document.querySelectorAll(".todo")
+    const todos = getTodoState()
+    
+    let filteredTodos = []
 
-    todos.forEach((element) => {
         switch (filterValue) {
             case "all":
-                element.classList.remove("hide")
+                filteredTodos = todos
                 break
 
             case "done":
-                if (element.classList.contains("done")) {
-                    element.classList.remove("hide")
-                } else {
-                    element.classList.add("hide")
-                }
+                filteredTodos = todos.filter(todo => todo.done)
                 break
             case "todo":
-                if (!element.classList.contains("done")) {
-                    element.classList.remove("hide")
-                } else {
-                    element.classList.add("hide")
-                }
+                
+                filteredTodos = todos.filter(todo => !todo.done)
                 break
         }
-    })
-})
 
-eraseBtn.addEventListener("click", (e) => {
-    e.preventDefault()
-    searchTask()
-    searchInput.focus()
+        renderTodos(filteredTodos)
+    })
+
+
+
+searchInput.addEventListener("input",(e)=>{
+
+    searchTask(e.target.value)
 })
 
 loadTodos()
